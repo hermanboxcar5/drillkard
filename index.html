@@ -36,7 +36,8 @@
   .progress-bar-wrap{height:2px;background:var(--surface2);flex-shrink:0}
   .progress-bar-fill{height:100%;background:#fff;transition:width .3s ease}
 
-  .map-section{height:400px;background:#0a0a0a;border:1px solid var(--border);border-radius:var(--radius);flex-shrink:0;overflow:hidden;}
+  :root{--map-height:400px}
+  .map-section{height:var(--map-height);background:#0a0a0a;border:1px solid var(--border);border-radius:var(--radius);flex-shrink:0;overflow:hidden;}
   #mapCanvas{width:100%;height:100%;display:block}
 
   .card-area{flex:1;display:flex;flex-direction:column;overflow:hidden;padding:8px 14px 0;gap:7px;min-height:0}
@@ -95,6 +96,10 @@
   .color-picker-label{font-size:11px;font-weight:600;color:var(--text-dim);letter-spacing:.3px}
   .reset-color-btn{font-size:11px;font-weight:700;padding:6px 10px;border:none;border-radius:8px;background:var(--surface2);color:var(--text);cursor:pointer;transition:opacity .15s;border:1px solid var(--border)}
   .reset-color-btn:hover{opacity:.85}
+
+  .size-picker-row{display:grid;grid-template-columns:1fr 84px;gap:12px;align-items:center;margin-bottom:16px}
+  .slider-row{display:flex;align-items:center;gap:10px}
+  .size-input{width:100%;height:36px;padding:0 10px;border-radius:10px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;outline:none}
 
   .rainbow-track-wrap{position:relative;height:22px;border-radius:11px;overflow:visible;cursor:pointer;touch-action:none}
   .rainbow-track{position:absolute;inset:0;border-radius:11px;background:linear-gradient(to right,hsl(0,75%,55%),hsl(30,75%,55%),hsl(60,75%,55%),hsl(120,75%,55%),hsl(180,75%,55%),hsl(240,75%,55%),hsl(300,75%,55%),hsl(360,75%,55%))}
@@ -208,6 +213,23 @@
       </div>
     </div>
 
+    <div class="section-divider"></div>
+
+    <div class="setting-name">Canvas size</div>
+    <div class="setting-desc">Choose how tall the map canvas should be.</div>
+    <div class="size-picker-row">
+      <div>
+        <div class="color-picker-top">
+          <div class="color-picker-label">Height</div>
+          <div id="mapHeightLabel" class="color-picker-label" style="opacity:.7">400px</div>
+        </div>
+        <div class="slider-row">
+          <input id="mapHeightSlider" type="range" min="200" max="700" step="10" value="400" oninput="updateMapHeightFrom(this.value)">
+        </div>
+      </div>
+      <input class="size-input" id="mapHeightInput" type="number" min="200" max="700" step="10" value="400" onchange="updateMapHeightFrom(this.value)">
+    </div>
+
   </div>
 </div>
 
@@ -222,8 +244,10 @@ const DRILL_DATA = {"commands":[{"id":0,"command":"March the platoon in","foot":
 // ═══════════════════════════════════════════
 const DEFAULT_LEFT_HUE = 220;  // blue default
 const DEFAULT_RIGHT_HUE = 45;  // gold default
+const DEFAULT_MAP_HEIGHT = 400;
 let leftHue  = DEFAULT_LEFT_HUE;
 let rightHue = DEFAULT_RIGHT_HUE;
+let mapHeight = DEFAULT_MAP_HEIGHT;
 
 function hslToRgbArr(h, s, l) {
   const a = s * Math.min(l, 1-l);
@@ -464,6 +488,7 @@ function savePreferences(){
   setCookie('drillkard_footOnCommand', footOnCommand ? '1' : '0');
   setCookie('drillkard_leftHue', leftHue);
   setCookie('drillkard_rightHue', rightHue);
+  setCookie('drillkard_mapHeight', mapHeight);
 }
 function loadPreferences(){
   const footCookie = getCookie('drillkard_footOnCommand');
@@ -472,12 +497,38 @@ function loadPreferences(){
   if(leftCookie !== null && !Number.isNaN(Number(leftCookie))) leftHue = Number(leftCookie);
   const rightCookie = getCookie('drillkard_rightHue');
   if(rightCookie !== null && !Number.isNaN(Number(rightCookie))) rightHue = Number(rightCookie);
+  const heightCookie = getCookie('drillkard_mapHeight');
+  if(heightCookie !== null && !Number.isNaN(Number(heightCookie))){
+    const h = Number(heightCookie);
+    if(h >= 200 && h <= 700) mapHeight = h;
+  }
   const optBefore = document.getElementById('optBefore');
   const optOn = document.getElementById('optOn');
   if(optBefore && optOn){
     optBefore.classList.toggle('active', !footOnCommand);
     optOn.classList.toggle('active', footOnCommand);
   }
+}
+function applyMapHeight(){
+  document.documentElement.style.setProperty('--map-height', `${mapHeight}px`);
+}
+function updateMapHeightUI(){
+  const label = document.getElementById('mapHeightLabel');
+  const slider = document.getElementById('mapHeightSlider');
+  const input = document.getElementById('mapHeightInput');
+  if(label) label.textContent = `${mapHeight}px`;
+  if(slider) slider.value = mapHeight;
+  if(input) input.value = mapHeight;
+}
+function updateMapHeightFrom(value){
+  const parsed = Number(value);
+  if(Number.isNaN(parsed)) return;
+  mapHeight = Math.max(200, Math.min(700, Math.round(parsed/10)*10));
+  updateMapHeightUI();
+  applyMapHeight();
+  savePreferences();
+  resizeCanvas();
+  render(0);
 }
 function resetLeftHue(){
   leftHue = DEFAULT_LEFT_HUE;
@@ -648,6 +699,8 @@ window.addEventListener('load',()=>{
   makeSlider('right');
   updateSliderUI('left');
   updateSliderUI('right');
+  updateMapHeightUI();
+  applyMapHeight();
   resizeCanvas();
   render(1);
 });
