@@ -91,7 +91,10 @@
   .color-picker-row{display:flex;align-items:center;gap:14px;margin-bottom:16px}
   .color-swatch{width:36px;height:36px;border-radius:10px;flex-shrink:0;border:1px solid rgba(255,255,255,0.12);transition:background .1s}
   .color-picker-col{flex:1}
-  .color-picker-label{font-size:11px;font-weight:600;color:var(--text-dim);margin-bottom:8px;letter-spacing:.3px}
+  .color-picker-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:10px}
+  .color-picker-label{font-size:11px;font-weight:600;color:var(--text-dim);letter-spacing:.3px}
+  .reset-color-btn{font-size:11px;font-weight:700;padding:6px 10px;border:none;border-radius:8px;background:var(--surface2);color:var(--text);cursor:pointer;transition:opacity .15s;border:1px solid var(--border)}
+  .reset-color-btn:hover{opacity:.85}
 
   .rainbow-track-wrap{position:relative;height:22px;border-radius:11px;overflow:visible;cursor:pointer;touch-action:none}
   .rainbow-track{position:absolute;inset:0;border-radius:11px;background:linear-gradient(to right,hsl(0,75%,55%),hsl(30,75%,55%),hsl(60,75%,55%),hsl(120,75%,55%),hsl(180,75%,55%),hsl(240,75%,55%),hsl(300,75%,55%),hsl(360,75%,55%))}
@@ -107,7 +110,7 @@
 
 <header>
   <div class="header-left">
-    <div class="header-title">Drill Card</div>
+    <div class="header-title">Drillkard</div>
     <div class="counter" id="counter">1 / 52</div>
   </div>
   <div class="jump-wrap">
@@ -168,8 +171,8 @@
     <div class="setting-name">Foot Timing</div>
     <div class="setting-desc">Choose whether the foot shown is your prep foot (before the command) or the foot you're stepping on as you call it.</div>
     <div class="two-way-toggle">
-      <button class="toggle-option active" id="optBefore" onclick="setFootMode(false)">Foot Before Command<span>Prep / warning foot</span></button>
-      <button class="toggle-option" id="optOn" onclick="setFootMode(true)">Foot On Command<span>Stepping foot</span></button>
+      <button class="toggle-option active" id="optBefore" onclick="setFootMode(false)">Foot Before Command<span>Last cadence before command</span></button>
+      <button class="toggle-option" id="optOn" onclick="setFootMode(true)">Foot On Command<span>Foot on first syllable of command</span></button>
     </div>
 
     <div class="section-divider"></div>
@@ -180,7 +183,10 @@
     <div class="color-picker-row">
       <div class="color-swatch" id="leftSwatch"></div>
       <div class="color-picker-col">
-        <div class="color-picker-label">Left foot</div>
+        <div class="color-picker-top">
+          <div class="color-picker-label">Left foot</div>
+          <button class="reset-color-btn" onclick="resetLeftHue()">Reset</button>
+        </div>
         <div class="rainbow-track-wrap" id="leftSliderWrap">
           <div class="rainbow-track"></div>
           <div class="rainbow-thumb" id="leftThumb"></div>
@@ -191,7 +197,10 @@
     <div class="color-picker-row">
       <div class="color-swatch" id="rightSwatch"></div>
       <div class="color-picker-col">
-        <div class="color-picker-label">Right foot</div>
+        <div class="color-picker-top">
+          <div class="color-picker-label">Right foot</div>
+          <button class="reset-color-btn" onclick="resetRightHue()">Reset</button>
+        </div>
         <div class="rainbow-track-wrap" id="rightSliderWrap">
           <div class="rainbow-track"></div>
           <div class="rainbow-thumb" id="rightThumb"></div>
@@ -211,8 +220,10 @@ const DRILL_DATA = {"commands":[{"id":0,"command":"March the platoon in","foot":
 // ═══════════════════════════════════════════
 // COLOR SYSTEM — hue-based, desaturated bg
 // ═══════════════════════════════════════════
-let leftHue  = 220;  // blue default
-let rightHue = 45;   // gold default
+const DEFAULT_LEFT_HUE = 220;  // blue default
+const DEFAULT_RIGHT_HUE = 45;  // gold default
+let leftHue  = DEFAULT_LEFT_HUE;
+let rightHue = DEFAULT_RIGHT_HUE;
 
 function hslToRgbArr(h, s, l) {
   const a = s * Math.min(l, 1-l);
@@ -441,6 +452,46 @@ const commands=DRILL_DATA.commands, total=commands.length;
 const reverseMap={Left:'Right',Right:'Left',Halted:'Halted'};
 function getDisplayFoot(f){return(f==='Halted'||!footOnCommand)?f:reverseMap[f];}
 
+function setCookie(name,value,days=365){
+  const d=new Date(); d.setTime(d.getTime()+days*24*60*60*1000);
+  document.cookie = `${name}=${encodeURIComponent(value)};expires=${d.toUTCString()};path=/`;
+}
+function getCookie(name){
+  const match = document.cookie.match('(?:^|; )'+name+'=([^;]*)');
+  return match ? decodeURIComponent(match[1]) : null;
+}
+function savePreferences(){
+  setCookie('drillkard_footOnCommand', footOnCommand ? '1' : '0');
+  setCookie('drillkard_leftHue', leftHue);
+  setCookie('drillkard_rightHue', rightHue);
+}
+function loadPreferences(){
+  const footCookie = getCookie('drillkard_footOnCommand');
+  if(footCookie !== null) footOnCommand = footCookie === '1';
+  const leftCookie = getCookie('drillkard_leftHue');
+  if(leftCookie !== null && !Number.isNaN(Number(leftCookie))) leftHue = Number(leftCookie);
+  const rightCookie = getCookie('drillkard_rightHue');
+  if(rightCookie !== null && !Number.isNaN(Number(rightCookie))) rightHue = Number(rightCookie);
+  const optBefore = document.getElementById('optBefore');
+  const optOn = document.getElementById('optOn');
+  if(optBefore && optOn){
+    optBefore.classList.toggle('active', !footOnCommand);
+    optOn.classList.toggle('active', footOnCommand);
+  }
+}
+function resetLeftHue(){
+  leftHue = DEFAULT_LEFT_HUE;
+  updateSliderUI('left');
+  savePreferences();
+  render(0);
+}
+function resetRightHue(){
+  rightHue = DEFAULT_RIGHT_HUE;
+  updateSliderUI('right');
+  savePreferences();
+  render(0);
+}
+
 function applyFootStyle(df){
   const tb=document.getElementById('tileBottom');
   const fv=document.getElementById('footValueLarge');
@@ -500,6 +551,7 @@ function setFootMode(on){
   footOnCommand=on;
   document.getElementById('optBefore').classList.toggle('active',!on);
   document.getElementById('optOn').classList.toggle('active',on);
+  savePreferences();
   render(0);
 }
 
@@ -534,6 +586,7 @@ function makeSlider(side){
     const hue=Math.round(Math.max(0,Math.min(1,(clientX-rect.left)/rect.width))*360);
     if(side==='left')leftHue=hue; else rightHue=hue;
     updateSliderUI(side);
+    savePreferences();
     render(0);
   }
   wrap.addEventListener('mousedown',e=>{dragging=true;update(e.clientX);e.preventDefault();});
@@ -590,6 +643,7 @@ function togglePicker(){
 // INIT
 // ═══════════════════════════════════════════
 window.addEventListener('load',()=>{
+  loadPreferences();
   makeSlider('left');
   makeSlider('right');
   updateSliderUI('left');
