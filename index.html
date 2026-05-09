@@ -265,8 +265,8 @@ const M2_CMD={
   25:{dot:{x:193.5,y:46},seg:6},     26:{dot:{x:193.5,y:46},seg:6},
   27:{dot:{x:193.5,y:23.5},seg:7},   28:{dot:{x:173.5,y:23.5},seg:8},
   29:{dot:{x:148.5,y:23.5},seg:8},   30:{dot:{x:131.5,y:22.5},seg:8},
-  31:{dot:{x:220.5,y:20.5},seg:10},  32:{dot:{x:209,y:18.5},seg:10},
-  33:{dot:{x:209,y:18.5},seg:10},    34:{dot:{x:187.5,y:19.5},seg:12},
+  31:{dot:{x:220.5,y:20.5},seg:10},  32:{dot:{x:209,y:19.5},seg:10},
+  33:{dot:{x:209,y:19.5},seg:10},    34:{dot:{x:187.5,y:19.5},seg:12},
   35:{dot:{x:158.5,y:19.5},seg:12},  36:{dot:{x:129,y:19.5},seg:12},
   37:{dot:{x:129,y:27.5},seg:13},    38:{dot:{x:129,y:27.5},seg:13},
   39:{dot:{x:129,y:37.5},seg:13},    40:{dot:{x:129,y:48},seg:13},
@@ -403,9 +403,7 @@ function drawDot(svgPt,T,rgb){
 }
 
 function getFootRgb(df){
-  if(df==='Left')  return hueToRgb(leftHue).join(',');
-  if(df==='Right') return hueToRgb(rightHue).join(',');
-  return '100,100,100';
+  return '255,255,255';
 }
 
 function drawMapGeneric(segs,pad,box,cmdData,cmdIdx){
