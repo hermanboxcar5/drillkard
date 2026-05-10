@@ -237,8 +237,375 @@
 // ═══════════════════════════════════════════
 // DRILL DATA
 // ═══════════════════════════════════════════
-const DRILL_DATA = {"commands":[{"id":0,"command":"March the platoon in","foot":"Halted","waitForUp":false,"note":"March them in with 2 \"column right\"s. Halt them in front of and distanced from the judge (Fsgt). Make sure/try you're best to keep 6 and center from your platoon."},{"id":1,"command":"Present Arms (entire unit)","foot":"Halted","waitForUp":false,"note":null},{"id":2,"command":"Verbal Report-In","foot":"Halted","waitForUp":false,"note":null},{"id":3,"command":"Order Arms","foot":"Halted","waitForUp":false,"note":null},{"id":4,"command":"Parade Rest","foot":"Halted","waitForUp":true,"note":null},{"id":5,"command":"Platoon Attention","foot":"Halted","waitForUp":true,"note":null},{"id":6,"command":"Left Step March","foot":"Halted","waitForUp":true,"note":null},{"id":7,"command":"Platoon Halt","foot":"Halted","waitForUp":true,"note":null},{"id":8,"command":"Right Step March","foot":"Halted","waitForUp":true,"note":null},{"id":9,"command":"Platoon Halt","foot":"Halted","waitForUp":true,"note":null},{"id":10,"command":"Count Off","foot":"Halted","waitForUp":false,"note":null},{"id":11,"command":"Close, March","foot":"Halted","waitForUp":true,"note":null},{"id":12,"command":"Extend, March","foot":"Halted","waitForUp":true,"note":null},{"id":13,"command":"Left Face","foot":"Halted","waitForUp":true,"note":null},{"id":14,"command":"About Face","foot":"Halted","waitForUp":true,"note":null},{"id":15,"command":"Close March","foot":"Halted","waitForUp":true,"note":null},{"id":16,"command":"Forward March","foot":"Halted","waitForUp":false,"note":"Do not perform \"left face\" or \"about face\" with the platoon, you march off on your own."},{"id":17,"command":"Column Right March","foot":"Right","waitForUp":false,"note":null},{"id":18,"command":"By the Right Flank March","foot":"Left","waitForUp":false,"note":null},{"id":19,"command":"By the Left Flank March","foot":"Right","waitForUp":false,"note":null},{"id":20,"command":"Column Left March","foot":"Left","waitForUp":false,"note":null},{"id":21,"command":"Close March (Forward March)","foot":"Left","waitForUp":false,"note":null},{"id":22,"command":"Extend March (Forward March)","foot":"Left","waitForUp":false,"note":null},{"id":23,"command":"Column Left March","foot":"Left","waitForUp":false,"note":null},{"id":24,"command":"Left Oblique March","foot":"Left","waitForUp":false,"note":null},{"id":25,"command":"Platoon Halt","foot":"Left","waitForUp":true,"note":null},{"id":26,"command":"Forward March","foot":"Halted","waitForUp":false,"note":null},{"id":27,"command":"Column Left March","foot":"Left","waitForUp":false,"note":null},{"id":28,"command":"Half Step March","foot":"Left","waitForUp":false,"note":null},{"id":29,"command":"Forward March","foot":"Left","waitForUp":false,"note":null},{"id":30,"command":"To the Rear March","foot":"Right","waitForUp":false,"note":null},{"id":31,"command":"To the Rear March","foot":"Right","waitForUp":false,"note":"After you call \"to the rear march\", you are going to halt, perform a left face and march off to your left. Then call your platoon to \"halt\" when you get the chance (as soon as possible)."},{"id":32,"command":"Platoon Halt","foot":"Left","waitForUp":true,"note":"March to the front of 1st squad leader and make sure you look to your right when you call commands."},{"id":33,"command":"Forward March","foot":"Halted","waitForUp":false,"note":null},{"id":34,"command":"Eyes Right","foot":"Left","waitForUp":false,"note":"Look to the judge (Fsgt) and salute."},{"id":35,"command":"Ready, Front","foot":"Right","waitForUp":false,"note":"Release the salute and look forward AFTER you call \"ready front\"."},{"id":36,"command":"Column Left March","foot":"Left","waitForUp":false,"note":"Get out of the platoon before the command is called."},{"id":37,"command":"Mark Time March","foot":"Left","waitForUp":false,"note":null},{"id":38,"command":"Forward March","foot":"Left","waitForUp":false,"note":null},{"id":39,"command":"Change Step, March","foot":"Right","waitForUp":false,"note":null},{"id":40,"command":"Platoon Halt","foot":"Left","waitForUp":true,"note":null},{"id":41,"command":"Close March","foot":"Halted","waitForUp":true,"note":null},{"id":42,"command":"Column Left March","foot":"Left","waitForUp":false,"note":null},{"id":43,"command":"Left Flank March","foot":"Right","waitForUp":false,"note":null},{"id":44,"command":"Right Flank March","foot":"Left","waitForUp":false,"note":null},{"id":45,"command":"Platoon Halt","foot":"Left","waitForUp":true,"note":null},{"id":46,"command":"Left Face","foot":"Halted","waitForUp":false,"note":null},{"id":47,"command":"Present Arms (entire unit)","foot":"Halted","waitForUp":false,"note":null},{"id":48,"command":"Verbal Report-Out","foot":"Halted","waitForUp":false,"note":null},{"id":49,"command":"Order Arms","foot":"Halted","waitForUp":false,"note":null},{"id":50,"command":"Right Face","foot":"Halted","waitForUp":false,"note":null},{"id":51,"command":"March Unit off Drill Deck","foot":"Halted","waitForUp":false,"note":"March out with \"by the right flank march\" followed by a \"by the left flank march\". Halt them outside the drill pad."}]};
-
+const haltnote="PC has to be 6 and center, 6 paces away from plt and centered on 3rd rank"
+const DRILL_DATA = {
+   "commands":[
+      {
+         "id":0,
+         "command":"March the platoon in",
+         "foot":"Halted",
+         "waitForUp":false,
+         "note":"March them in with 2 \"column right\"s. Halt them in front of and distanced from the judge (Fsgt). Make sure/try you're best to keep 6 and center from your platoon."
+      },
+      {
+         "id":1,
+         "command":"Present Arms (entire unit)",
+         "foot":"Halted",
+         "waitForUp":false,
+         "note":null
+      },
+      {
+         "id":2,
+         "command":"Verbal Report-In",
+         "foot":"Halted",
+         "waitForUp":false,
+         "note":null
+      },
+      {
+         "id":3,
+         "command":"Order Arms",
+         "foot":"Halted",
+         "waitForUp":false,
+         "note":null
+      },
+      {
+         "id":4,
+         "command":"Parade Rest",
+         "foot":"Halted",
+         "waitForUp":true,
+         "note":null
+      },
+      {
+         "id":5,
+         "command":"Platoon Attention",
+         "foot":"Halted",
+         "waitForUp":true,
+         "note":null
+      },
+      {
+         "id":6,
+         "command":"Left Step March",
+         "foot":"Halted",
+         "waitForUp":true,
+         "note":null
+      },
+      {
+         "id":7,
+         "command":"Platoon Halt",
+         "foot":"Halted",
+         "waitForUp":true,
+         "note":haltnote
+      },
+      {
+         "id":8,
+         "command":"Right Step March",
+         "foot":"Halted",
+         "waitForUp":true,
+         "note":null
+      },
+      {
+         "id":9,
+         "command":"Platoon Halt",
+         "foot":"Halted",
+         "waitForUp":true,
+         "note":haltnote
+      },
+      {
+         "id":10,
+         "command":"Count Off",
+         "foot":"Halted",
+         "waitForUp":false,
+         "note":null
+      },
+      {
+         "id":11,
+         "command":"Close, March",
+         "foot":"Halted",
+         "waitForUp":true,
+         "note":null
+      },
+      {
+         "id":12,
+         "command":"Extend, March",
+         "foot":"Halted",
+         "waitForUp":true,
+         "note":null
+      },
+      {
+         "id":13,
+         "command":"Left Face",
+         "foot":"Halted",
+         "waitForUp":true,
+         "note":null
+      },
+      {
+         "id":14,
+         "command":"About Face",
+         "foot":"Halted",
+         "waitForUp":true,
+         "note":null
+      },
+      {
+         "id":15,
+         "command":"Close March",
+         "foot":"Halted",
+         "waitForUp":true,
+         "note":null
+      },
+      {
+         "id":16,
+         "command":"Forward March",
+         "foot":"Halted",
+         "waitForUp":false,
+         "note":"Do not perform \"left face\" or \"about face\" with the platoon, you march off on your own."
+      },
+      {
+         "id":17,
+         "command":"Column Right March",
+         "foot":"Right",
+         "waitForUp":false,
+         "note":null
+      },
+      {
+         "id":18,
+         "command":"By the Right Flank March",
+         "foot":"Left",
+         "waitForUp":false,
+         "note":null
+      },
+      {
+         "id":19,
+         "command":"By the Left Flank March",
+         "foot":"Right",
+         "waitForUp":false,
+         "note":null
+      },
+      {
+         "id":20,
+         "command":"Column Left March",
+         "foot":"Left",
+         "waitForUp":false,
+         "note":null
+      },
+      {
+         "id":21,
+         "command":"Close March (Forward March)",
+         "foot":"Left",
+         "waitForUp":false,
+         "note":null
+      },
+      {
+         "id":22,
+         "command":"Extend March (Forward March)",
+         "foot":"Left",
+         "waitForUp":false,
+         "note":null
+      },
+      {
+         "id":23,
+         "command":"Column Left March",
+         "foot":"Left",
+         "waitForUp":false,
+         "note":null
+      },
+      {
+         "id":24,
+         "command":"Left Oblique March",
+         "foot":"Left",
+         "waitForUp":false,
+         "note":null
+      },
+      {
+         "id":25,
+         "command":"Platoon Halt",
+         "foot":"Left",
+         "waitForUp":true,
+         "note":haltnote
+      },
+      {
+         "id":26,
+         "command":"Forward March",
+         "foot":"Halted",
+         "waitForUp":false,
+         "note":null
+      },
+      {
+         "id":27,
+         "command":"Column Left March",
+         "foot":"Left",
+         "waitForUp":false,
+         "note":null
+      },
+      {
+         "id":28,
+         "command":"Half Step March",
+         "foot":"Left",
+         "waitForUp":false,
+         "note":null
+      },
+      {
+         "id":29,
+         "command":"Forward March",
+         "foot":"Left",
+         "waitForUp":false,
+         "note":null
+      },
+      {
+         "id":30,
+         "command":"To the Rear March",
+         "foot":"Right",
+         "waitForUp":false,
+         "note":null
+      },
+      {
+         "id":31,
+         "command":"To the Rear March",
+         "foot":"Right",
+         "waitForUp":false,
+         "note":"After you call \"to the rear march\", you are going to halt, perform a left face and march off to your left. Then call your platoon to \"halt\" when you get the chance (as soon as possible)."
+      },
+      {
+         "id":32,
+         "command":"Platoon Halt",
+         "foot":"Left",
+         "waitForUp":true,
+         "note":"March to the front of 1st squad leader and make sure you look to your right when you call commands."
+      },
+      {
+         "id":33,
+         "command":"Forward March",
+         "foot":"Halted",
+         "waitForUp":false,
+         "note":null
+      },
+      {
+         "id":34,
+         "command":"Eyes Right",
+         "foot":"Left",
+         "waitForUp":false,
+         "note":"Look to the judge (Fsgt) and salute."
+      },
+      {
+         "id":35,
+         "command":"Ready, Front",
+         "foot":"Right",
+         "waitForUp":false,
+         "note":"Release the salute and look forward AFTER you call \"ready front\"."
+      },
+      {
+         "id":36,
+         "command":"Column Left March",
+         "foot":"Left",
+         "waitForUp":false,
+         "note":"Get out of the platoon before the command is called."
+      },
+      {
+         "id":37,
+         "command":"Mark Time March",
+         "foot":"Left",
+         "waitForUp":false,
+         "note":null
+      },
+      {
+         "id":38,
+         "command":"Forward March",
+         "foot":"Left",
+         "waitForUp":false,
+         "note":null
+      },
+      {
+         "id":39,
+         "command":"Change Step, March",
+         "foot":"Right",
+         "waitForUp":false,
+         "note":null
+      },
+      {
+         "id":40,
+         "command":"Platoon Halt",
+         "foot":"Left",
+         "waitForUp":true,
+         "note":haltnote
+      },
+      {
+         "id":41,
+         "command":"Close March",
+         "foot":"Halted",
+         "waitForUp":true,
+         "note":null
+      },
+      {
+         "id":42,
+         "command":"Column Left March",
+         "foot":"Left",
+         "waitForUp":false,
+         "note":null
+      },
+      {
+         "id":43,
+         "command":"Left Flank March",
+         "foot":"Right",
+         "waitForUp":false,
+         "note":null
+      },
+      {
+         "id":44,
+         "command":"Right Flank March",
+         "foot":"Left",
+         "waitForUp":false,
+         "note":null
+      },
+      {
+         "id":45,
+         "command":"Platoon Halt",
+         "foot":"Left",
+         "waitForUp":true,
+         "note":haltnote
+      },
+      {
+         "id":46,
+         "command":"Left Face",
+         "foot":"Halted",
+         "waitForUp":false,
+         "note":null
+      },
+      {
+         "id":47,
+         "command":"Present Arms (entire unit)",
+         "foot":"Halted",
+         "waitForUp":false,
+         "note":null
+      },
+      {
+         "id":48,
+         "command":"Verbal Report-Out",
+         "foot":"Halted",
+         "waitForUp":false,
+         "note":null
+      },
+      {
+         "id":49,
+         "command":"Order Arms",
+         "foot":"Halted",
+         "waitForUp":false,
+         "note":null
+      },
+      {
+         "id":50,
+         "command":"Right Face",
+         "foot":"Halted",
+         "waitForUp":false,
+         "note":null
+      },
+      {
+         "id":51,
+         "command":"March Unit off Drill Deck",
+         "foot":"Halted",
+         "waitForUp":false,
+         "note":"March out with \"by the right flank march\" followed by a \"by the left flank march\". Halt them outside the drill pad."
+      }
+   ]
+}
 // ═══════════════════════════════════════════
 // COLOR SYSTEM — hue-based, desaturated bg
 // ═══════════════════════════════════════════
